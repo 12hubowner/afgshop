@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#0d0d0d;color:#fff}
+        .header{background:#1a1a1a;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff5500}
+        .logo{font-size:24px;font-weight:bold;color:#ff5500}.logo span{color:#fff}
+        .nav a{color:#fff;text-decoration:none;margin-left:30px;transition:.3s}.nav a:hover{color:#ff5500}
+        .container{max-width:600px;margin:40px auto;padding:0 20px}
+        .title{font-size:28px;color:#ff5500;margin-bottom:30px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;color:#aaa;margin-bottom:5px}
+        .form-group input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#1a1a1a;color:#fff;font-size:16px}
+        .btn{width:100%;background:#ff5500;color:#fff;padding:14px;border-radius:30px;border:none;font-weight:600;font-size:16px;cursor:pointer;transition:.3s}
+        .btn:hover{background:#ff7700}
+        .back-link{color:#666;text-decoration:none;display:inline-block;margin-bottom:20px}.back-link:hover{color:#ff5500}
+        .flash{max-width:600px;margin:20px auto;padding:0 20px}
+        .flash-msg{padding:12px 20px;border-radius:8px;margin-bottom:10px}
+        .flash-success{background:#1a3a1a;border:1px solid #57F287;color:#57F287}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">AFG <span>Admin</span></div>
+        <nav class="nav">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/add_product">➕ Add Product</a>
+            <a href="/admin/settings">⚙️ Settings</a>
+            <a href="/admin/logout">🚪 Logout</a>
+        </nav>
+    </header>
+
+    <div class="flash">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+        <a href="/admin/dashboard" class="back-link">← Back</a>
+        <h1 class="title">⚙️ Store Settings</h1>
+        <form method="POST">
+            <div class="form-group"><label>Store Name</label><input type="text" name="store_name" value="{{ settings.store_name }}"></div>
+            <div class="form-group"><label>Store Tagline</label><input type="text" name="store_tagline" value="{{ settings.store_tagline }}"></div>
+            <div class="form-group"><label>Currency Symbol</label><input type="text" name="currency_symbol" value="{{ settings.currency_symbol }}"></div>
+            <div class="form-group"><label>Shipping Cost ($)</label><input type="number" name="shipping_cost" step="0.01" value="{{ settings.shipping_cost }}"></div>
+            <div class="form-group"><label>Free Shipping Over ($)</label><input type="number" name="free_shipping_over" step="0.01" value="{{ settings.free_shipping_over }}"></div>
+            <div class="form-group"><label>Cash App Tag</label><input type="text" name="cashapp_tag" value="{{ settings.cashapp_tag }}"></div>
+            <div class="form-group"><label>Admin Password</label><input type="password" name="admin_password" placeholder="Change password"></div>
+            <button type="submit" class="btn">💾 Save Settings</button>
+        </form>
+    </div>
+</body>
+</html>
