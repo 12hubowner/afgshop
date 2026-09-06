@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - {{ settings.store_name }}</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#0d0d0d;color:#fff}
+        .header{background:#1a1a1a;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff5500}
+        .logo{font-size:28px;font-weight:bold;color:#ff5500}.logo span{color:#fff}
+        .nav a{color:#fff;text-decoration:none;margin-left:30px;transition:.3s}.nav a:hover{color:#ff5500}
+        .cart-btn{background:#ff5500;padding:8px 20px;border-radius:25px;color:#fff!important}
+        .container{max-width:1000px;margin:40px auto;padding:0 20px}
+        .profile-header{display:flex;gap:30px;background:#1a1a1a;padding:30px;border-radius:15px;border:1px solid #2a2a2a;margin-bottom:30px;align-items:center}
+        .avatar{width:80px;height:80px;border-radius:50%;background:#ff5500;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:bold}
+        .profile-info h2{font-size:24px;margin-bottom:5px}
+        .profile-info p{color:#888}
+        .section-title{font-size:24px;color:#ff5500;margin:30px 0 15px}
+        .order-card{background:#1a1a1a;padding:20px;border-radius:12px;border:1px solid #2a2a2a;margin-bottom:15px}
+        .order-card .row{display:flex;justify-content:space-between;padding:5px 0}
+        .order-card .label{color:#888}
+        .order-card .value{color:#fff}
+        .order-card .total{color:#ff5500;font-weight:bold}
+        .status-badge{display:inline-block;padding:2px 12px;border-radius:12px;font-size:12px;font-weight:bold}
+        .status-pending{background:#FEE75C;color:#000}
+        .status-confirmed{background:#57F287;color:#000}
+        .status-shipped{background:#5865F2;color:#fff}
+        .status-closed{background:#ED4245;color:#fff}
+        .empty{text-align:center;padding:40px;color:#666}
+        .btn{display:inline-block;background:#ff5500;color:#fff;padding:10px 25px;border-radius:25px;text-decoration:none;font-weight:600;transition:.3s}
+        .btn:hover{background:#ff7700}
+        .footer{text-align:center;padding:30px;color:#666;border-top:1px solid #1a1a1a;margin-top:40px}
+        .flash{max-width:1000px;margin:20px auto;padding:0 20px}
+        .flash-msg{padding:12px 20px;border-radius:8px;margin-bottom:10px}
+        .flash-success{background:#1a3a1a;border:1px solid #57F287;color:#57F287}
+        .flash-warning{background:#3a3a1a;border:1px solid #FEE75C;color:#FEE75C}
+        @media(max-width:600px){.header{flex-direction:column;padding:15px}.nav a{margin:0 10px;font-size:14px}.profile-header{flex-direction:column;text-align:center}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">{{ settings.store_name }} <span>Shop</span></div>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            <a href="/profile">👤 {{ user.username }}</a>
+            <a href="/cart" class="cart-btn">🛒 Cart</a>
+            <a href="/logout">🚪 Logout</a>
+        </nav>
+    </header>
+
+    <div class="flash">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="avatar">{{ user.username[0].upper() }}</div>
+            <div class="profile-info">
+                <h2>{{ user.username }}</h2>
+                <p>📧 {{ user.email }}</p>
+                <p>📅 Member since {{ user.created_at[:10] }}</p>
+            </div>
+        </div>
+        <h2 class="section-title">📦 My Orders</h2>
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="row"><span class="label">Order ID</span><span class="value"><strong>{{ order.order_id }}</strong></span></div>
+                <div class="row"><span class="label">Date</span><span class="value">{{ order.date[:19] }}</span></div>
+                <div class="row"><span class="label">Total</span><span class="total">{{ settings.currency_symbol }}{{ "%.2f"|format(order.total) }}</span></div>
+                <div class="row"><span class="label">Status</span><span><span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span></span></div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty"><p>🛒 You haven't placed any orders yet.</p><br><a href="/shop" class="btn">Start Shopping</a></div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 {{ settings.store_name }} - Premium Streetwear</p>
+    </footer>
+</body>
+</html>
