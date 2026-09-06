@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - {{ settings.store_name }}</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#0d0d0d;color:#fff}
+        .header{background:#1a1a1a;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff5500}
+        .logo{font-size:28px;font-weight:bold;color:#ff5500}.logo span{color:#fff}
+        .nav a{color:#fff;text-decoration:none;margin-left:30px;transition:.3s}.nav a:hover{color:#ff5500}
+        .cart-btn{background:#ff5500;padding:8px 20px;border-radius:25px;color:#fff!important}
+        .cart-container{max-width:1000px;margin:40px auto;padding:0 20px}
+        .cart-title{font-size:32px;margin-bottom:30px;color:#ff5500}
+        .cart-item{display:flex;align-items:center;background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:15px;border:1px solid #2a2a2a;gap:20px}
+        .cart-item img{width:80px;height:80px;object-fit:cover;border-radius:8px}
+        .cart-item-info{flex:1}
+        .cart-item-name{font-size:18px;font-weight:600}
+        .cart-item-price{color:#ff5500;font-size:18px}
+        .cart-item-qty{display:flex;align-items:center;gap:10px}
+        .cart-item-qty input{width:50px;padding:5px;border-radius:8px;border:1px solid #2a2a2a;background:#111;color:#fff;text-align:center}
+        .cart-item-qty button{background:#ff5500;border:none;color:#fff;padding:5px 15px;border-radius:8px;cursor:pointer}
+        .cart-item-qty button:hover{background:#ff7700}
+        .remove-btn{background:#ff3333;border:none;color:#fff;padding:8px 15px;border-radius:8px;cursor:pointer}
+        .remove-btn:hover{background:#cc0000}
+        .cart-total{text-align:right;padding:20px;background:#1a1a1a;border-radius:12px;border:1px solid #2a2a2a;margin-top:20px}
+        .cart-total h2{font-size:28px;color:#ff5500}
+        .btn{display:inline-block;background:#ff5500;color:#fff;padding:14px 40px;border-radius:30px;text-decoration:none;font-weight:600;font-size:16px;transition:.3s;border:none;cursor:pointer;margin-top:15px}
+        .btn:hover{background:#ff7700;transform:scale(1.05)}
+        .empty-cart{text-align:center;padding:60px;color:#666}
+        .empty-cart h2{font-size:32px;margin-bottom:15px}
+        .back-link{color:#666;text-decoration:none;display:inline-block;margin-bottom:20px}.back-link:hover{color:#ff5500}
+        .footer{text-align:center;padding:30px;color:#666;border-top:1px solid #1a1a1a;margin-top:40px}
+        .flash{max-width:1000px;margin:20px auto;padding:0 20px}
+        .flash-msg{padding:12px 20px;border-radius:8px;margin-bottom:10px}
+        .flash-success{background:#1a3a1a;border:1px solid #57F287;color:#57F287}
+        .flash-error{background:#3a1a1a;border:1px solid #ED4245;color:#ED4245}
+        @media(max-width:600px){.cart-item{flex-direction:column;text-align:center}.cart-item-qty{justify-content:center}.header{flex-direction:column;padding:15px}.nav a{margin:0 10px;font-size:14px}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">{{ settings.store_name }} <span>Shop</span></div>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            {% if user %}
+            <a href="/profile">👤 {{ user }}</a>
+            <a href="/logout">🚪 Logout</a>
+            {% else %}
+            <a href="/login">🔑 Login</a>
+            <a href="/register">📝 Register</a>
+            {% endif %}
+            <a href="/cart" class="cart-btn">🛒 Cart</a>
+        </nav>
+    </header>
+
+    <div class="flash">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <div class="cart-container">
+        <a href="/shop" class="back-link">← Continue Shopping</a>
+        <h1 class="cart-title">🛒 Your Cart</h1>
+
+        {% if cart %}
+            {% for item in cart %}
+            <div class="cart-item">
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">{{ item.name }}</div>
+                    <div class="cart-item-price">{{ settings.currency_symbol }}{{ "%.2f"|format(item.price) }}</div>
+                </div>
+                <form method="POST" action="/update_cart/{{ item.id }}" class="cart-item-qty">
+                    <input type="number" name="qty" value="{{ item.qty }}" min="1" max="10">
+                    <button type="submit">Update</button>
+                </form>
+                <form method="POST" action="/remove_from_cart/{{ item.id }}">
+                    <button type="submit" class="remove-btn">Remove</button>
+                </form>
+            </div>
+            {% endfor %}
+
+            <div class="cart-total">
+                <h2>Total: {{ settings.currency_symbol }}{{ "%.2f"|format(grand_total) }}</h2>
+                <p style="color:#888;font-size:14px;">Free shipping on orders over {{ settings.currency_symbol }}{{ "%.2f"|format(settings.free_shipping_over) }}</p>
+                <a href="/checkout" class="btn">✅ Proceed to Checkout</a>
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <h2>🛒 Your cart is empty</h2>
+                <p>Browse our collection and add some items!</p>
+                <a href="/shop" class="btn">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 {{ settings.store_name }} - Premium Streetwear</p>
+    </footer>
+</body>
+</html>
