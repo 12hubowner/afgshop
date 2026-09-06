@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - {{ settings.store_name }}</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#0d0d0d;color:#fff}
+        .header{background:#1a1a1a;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff5500}
+        .logo{font-size:28px;font-weight:bold;color:#ff5500}.logo span{color:#fff}
+        .nav a{color:#fff;text-decoration:none;margin-left:30px;transition:.3s}.nav a:hover{color:#ff5500}
+        .cart-btn{background:#ff5500;padding:8px 20px;border-radius:25px;color:#fff!important}
+        .container{max-width:600px;margin:60px auto;padding:0 20px}
+        h1{color:#ff5500;font-size:32px;margin-bottom:30px;text-align:center}
+        .track-form{background:#1a1a1a;padding:30px;border-radius:15px;border:1px solid #2a2a2a}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;color:#aaa;margin-bottom:5px}
+        .form-group input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#111;color:#fff;font-size:16px}
+        .btn{width:100%;background:#ff5500;color:#fff;padding:14px;border-radius:30px;border:none;font-size:18px;font-weight:600;cursor:pointer;transition:.3s}
+        .btn:hover{background:#ff7700}
+        .footer{text-align:center;padding:30px;color:#666;border-top:1px solid #1a1a1a;margin-top:40px}
+        .flash{max-width:600px;margin:20px auto;padding:0 20px}
+        .flash-msg{padding:12px 20px;border-radius:8px;margin-bottom:10px}
+        .flash-error{background:#3a1a1a;border:1px solid #ED4245;color:#ED4245}
+        @media(max-width:600px){.header{flex-direction:column;padding:15px}.nav a{margin:0 10px;font-size:14px}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">{{ settings.store_name }} <span>Shop</span></div>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            {% if user %}
+            <a href="/profile">👤 {{ user }}</a>
+            <a href="/logout">🚪 Logout</a>
+            {% else %}
+            <a href="/login">🔑 Login</a>
+            <a href="/register">📝 Register</a>
+            {% endif %}
+            <a href="/cart" class="cart-btn">🛒 Cart</a>
+        </nav>
+    </header>
+
+    <div class="flash">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+        <h1>📦 Track Your Order</h1>
+        <div class="track-form">
+            <form method="POST">
+                <div class="form-group"><label>Enter your Order ID</label><input type="text" name="order_id" placeholder="e.g., AFG-20260101-1234" required></div>
+                <button type="submit" class="btn">🔍 Track Order</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 {{ settings.store_name }} - Premium Streetwear</p>
+    </footer>
+</body>
+</html>
