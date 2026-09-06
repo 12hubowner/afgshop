@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - {{ settings.store_name }}</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#0d0d0d;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center}
+        .container{text-align:center;padding:40px;max-width:500px}
+        .icon{font-size:80px;margin-bottom:20px}
+        h1{color:#57F287;font-size:36px;margin-bottom:15px}
+        p{color:#aaa;font-size:18px;margin-bottom:10px}
+        .order-id{background:#1a1a1a;padding:15px;border-radius:10px;border:1px solid #2a2a2a;font-size:20px;color:#ff5500;margin:20px 0;font-weight:bold}
+        .btn{display:inline-block;background:#ff5500;color:#fff;padding:14px 40px;border-radius:30px;text-decoration:none;font-weight:600;font-size:16px;transition:.3s}
+        .btn:hover{background:#ff7700;transform:scale(1.05)}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">✅</div>
+        <h1>Order Confirmed!</h1>
+        <p>Thank you for your order!</p>
+        <div class="order-id">Order ID: {{ order.order_id }}</div>
+        <p style="color:#888;font-size:14px;">💳 Send payment to Cash App: {{ settings.cashapp_tag }}</p>
+        <br><a href="/" class="btn">Continue Shopping</a>
+    </div>
+</body>
+</html>
