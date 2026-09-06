@@ -1,0 +1,11 @@
+{
+    "store_name": "AFG Shop",
+    "store_tagline": "Premium Streetwear",
+    "currency_symbol": "$",
+    "admin_password": "afgshop2026",
+    "payment_methods": ["Cash App"],
+    "cashapp_tag": "$sabbotdiscord",
+    "shipping_cost": 5.99,
+    "free_shipping_over": 50.0,
+    "countries": ["United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Other"]
+}
